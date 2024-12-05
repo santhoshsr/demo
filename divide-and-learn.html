@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Divide and Learn</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f0f8ff;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      color: #333;
+    }
+    button {
+      margin: 10px;
+      padding: 15px 20px;
+      font-size: 18px;
+      cursor: pointer;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    canvas {
+      display: block;
+      margin: 20px auto;
+      border: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+  <h1>Divide and Learn!</h1>
+  <button onclick="startLesson()">Learn</button>
+  <button onclick="startPractice()">Practice</button>
+  <button onclick="viewProgress()">View Progress</button>
+  <canvas id="canvas" width="400" height="200"></canvas>
+
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let score = 0;
+
+    // Draw apples on canvas
+    function drawApples(count) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
+      for (let i = 0; i < count; i++) {
+        ctx.beginPath();
+        ctx.arc(50 + i * 50, 100, 20, 0, 2 * Math.PI); // Apples as circles
+        ctx.fillStyle = 'red';
+        ctx.fill();
+        ctx.closePath();
+      }
+    }
+
+    // Show division animation
+    function animateDivision(total, groups) {
+      drawApples(total); // Initial drawing
+      setTimeout(() => {
+        const applesPerGroup = Math.floor(total / groups);
+        alert(`Each group gets ${applesPerGroup} apples!`);
+        drawApples(applesPerGroup); // Redraw after division
+      }, 1000);
+    }
+
+    // Start learning mode
+    function startLesson() {
+      alert("Welcome to the lesson! Let's learn about division.");
+      animateDivision(6, 2); // Example for teaching division
+    }
+
+    // Start practice mode with random problems
+    function startPractice() {
+      const num1 = Math.floor(Math.random() * 20) + 1;
+      const num2 = Math.floor(Math.random() * 10) + 1;
+      const correctAnswer = Math.floor(num1 / num2);
+      const userAnswer = prompt(`What is ${num1} ÷ ${num2}?`);
+
+      if (parseInt(userAnswer) === correctAnswer) {
+        score += 10;
+        alert(`Correct! Your score is now ${score}.`);
+        saveProgress(score); // Save progress
+      } else {
+        alert(`Wrong! The correct answer is ${correctAnswer}.`);
+      }
+    }
+
+    // Save progress to localStorage
+    function saveProgress(score) {
+      localStorage.setItem('score', score);
+    }
+
+    // View progress
+    function viewProgress() {
+      const savedScore = localStorage.getItem('score') || 0;
+      alert(`Your current score is: ${savedScore}`);
+    }
+
+    // Initialize the app
+    function init() {
+      const savedScore = localStorage.getItem('score');
+      if (savedScore) {
+        score = parseInt(savedScore);
+        alert(`Welcome back! Your score is ${score}.`);
+      } else {
+        alert("Welcome! Start learning and practicing division.");
+      }
+    }
+
+    // Run initialization on page load
+    window.onload = init;
+  </script>
+</body>
+</html>
